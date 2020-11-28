@@ -61,6 +61,12 @@ pub enum Ttl {
     /// Actual ttl is computed at connection creation by adding `min` duration to
     /// a random duration between 0 and `fuzz`.
     Fuzzy { min: Duration, fuzz: Duration },
+    /// The connection will not been reused. A new connection will be created
+    /// for each `get()` on the pool.
+    ///
+    /// Enabling Once ttl means the pool will not keep any connection opened.
+    /// So it won't act as a pool of connection. Used for testing purpose.
+    Once,
 }
 
 /// Manages creation and destruction of redis connections.
@@ -105,6 +111,8 @@ impl deadpool::managed::Manager<RedisConnection, redis::RedisError> for RedisCon
                                 rand::thread_rng().gen_range(0.0, fuzz.as_secs_f64()),
                             )
                     }
+                    // already expired ;)
+                    Ttl::Once => Instant::now(),
                 }),
         })
     }
