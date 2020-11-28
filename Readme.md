@@ -1,11 +1,11 @@
 # redis-async-pool Deadpool manager for asynchronous Redis connections [![crates.io](https://meritbadge.herokuapp.com/redis-async-pool)](https://crates.io/crates/redis-async-pool) [![docs.rs](https://docs.rs/redis-async-pool/badge.svg)](https://docs.rs/redis-async-pool/) [![Build Status](https://travis-ci.org/zenria/redis-async-pool.svg?branch=master)](https://travis-ci.org/zenria/redis-async-pool)
 
  Redis-async-pool implements a deadpool manager for asynchronous
- connection of the redis crate. Pooled connections can be used
+ connections of the [redis crate](https://crates.io/crates/redis). Pooled connections can be used
  as regular `redis::aio::Connection`.
 
  ## Features
- 
+
  - runtime agnostic (tested with tokio or async-std)
  - optional check of connection on recycle
  - optional ttl on connections
