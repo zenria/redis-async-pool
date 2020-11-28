@@ -39,6 +39,7 @@ use std::{
 
 use async_trait::async_trait;
 use deadpool::managed::RecycleError;
+use rand::Rng;
 use redis::AsyncCommands;
 
 pub use deadpool;
@@ -49,12 +50,24 @@ pub use deadpool;
 /// more information in the documentation of the `deadpool` crate.
 pub type RedisPool = deadpool::managed::Pool<RedisConnection, redis::RedisError>;
 
+/// Time to live of a connection
+pub enum Ttl {
+    /// Connection will expire after the given duration
+    Simple(Duration),
+    /// Connection will expire after at least `min` time and at most
+    /// `min + fuzz` time.
+    ///
+    /// Actual ttl is computed at connection creation by adding `min` duration to
+    /// a random duration between 0 and `fuzz`.
+    Fuzzy { min: Duration, fuzz: Duration },
+}
+
 /// Manages creation and destruction of redis connections.
 ///
 pub struct RedisConnectionManager {
     client: redis::Client,
     check_on_recycle: bool,
-    connection_ttl: Option<Duration>,
+    connection_ttl: Option<Ttl>,
 }
 
 impl RedisConnectionManager {
@@ -65,11 +78,7 @@ impl RedisConnectionManager {
     /// will be created.
     ///
     /// If `connection_ttl` is set, the connection will be recreated after the given duration.
-    pub fn new(
-        client: redis::Client,
-        check_on_recycle: bool,
-        connection_ttl: Option<Duration>,
-    ) -> Self {
+    pub fn new(client: redis::Client, check_on_recycle: bool, connection_ttl: Option<Ttl>) -> Self {
         Self {
             client,
             check_on_recycle,
@@ -86,7 +95,16 @@ impl deadpool::managed::Manager<RedisConnection, redis::RedisError> for RedisCon
             expires_at: self
                 .connection_ttl
                 .as_ref()
-                .map(|max_duration| Instant::now() + *max_duration),
+                .map(|max_duration| match max_duration {
+                    Ttl::Simple(ttl) => Instant::now() + *ttl,
+                    Ttl::Fuzzy { min, fuzz } => {
+                        Instant::now()
+                            + *min
+                            + Duration::from_secs_f64(
+                                rand::thread_rng().gen_range(0.0, fuzz.as_secs_f64()),
+                            )
+                    }
+                }),
         })
     }
     async fn recycle(
