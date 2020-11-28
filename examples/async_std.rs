@@ -1,0 +1,21 @@
+use std::error::Error;
+
+use redis::AsyncCommands;
+use redis_async_pool::{RedisConnectionManager, RedisPool};
+
+#[async_std::main]
+async fn main() -> Result<(), Box<dyn Error>> {
+    let pool = RedisPool::new(
+        RedisConnectionManager::new(redis::Client::open("redis://localhost:6379")?, true, None),
+        5,
+    );
+
+    let mut con = pool.get().await?;
+    con.set(b"key", b"value").await?;
+    let value: Vec<u8> = con.get(b"key").await?;
+    assert_eq!(value, b"value");
+    let exists: bool = con.exists(b"key").await?;
+    println!("Key `key` exists? {}", exists);
+
+    Ok(())
+}
