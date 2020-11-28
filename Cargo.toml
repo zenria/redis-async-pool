@@ -1,6 +1,6 @@
 [package]
 name = "redis-async-pool"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Philippe GASSMANN <philoops@gmail.com>"]
 edition = "2018"
 keywords = ["redis", "deadpool", "pool", "async"]
