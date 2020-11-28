@@ -1,7 +1,7 @@
 //! # Deadpool manager for asynchronous Redis connections
 //!
 //! redis-async-pool implements a deadpool manager for asynchronous
-//! connections of the redis [crate](https://crates.io/crates/redis). Pooled connections can be used
+//! connections of the [redis crate](https://crates.io/crates/redis). Pooled connections can be used
 //! as regular `redis::aio::Connection`.
 //!
 //! ## Features
