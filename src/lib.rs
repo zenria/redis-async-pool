@@ -15,7 +15,7 @@
 //! use redis::AsyncCommands;
 //! use redis_async_pool::{RedisConnectionManager, RedisPool};
 //!
-//! // Create a pool of maximum 5, checked on reuse without ttl.
+//! // Create a pool of maximum 5 connections, checked on reuse without ttl.
 //!
 //! let pool = RedisPool::new(
 //!     RedisConnectionManager::new(redis::Client::open("redis://localhost:6379")?, true, None),
