@@ -6,6 +6,7 @@ edition = "2018"
 keywords = ["redis", "deadpool", "pool", "async"]
 description = "Deadpool manager for asynchronous Redis connections"
 repository = "https://github.com/zenria/redis-async-pool" 
+license = "MIT OR Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
