@@ -1,11 +1,11 @@
 //! # Deadpool manager for asynchronous Redis connections
 //!
 //! redis-async-pool implements a deadpool manager for asynchronous
-//! connections of the [redis crate](https://crates.io/crates/redis). Pooled connections can be used
-//! as regular `redis::aio::Connection`.
+//! connections of the [redis crate](https://crates.io/crates/redis). Connections returned by  
+//! the pool can be used as regular `redis::aio::Connection`.
 //!
 //! ## Features
-//! - runtime agnostic (tested with tokio or async-std)
+//! - runtime agnostic (tested with tokio & async-std)
 //! - optional check of connection on recycle
 //! - optional ttl on connections
 //!
@@ -16,12 +16,13 @@
 //! use redis_async_pool::{RedisConnectionManager, RedisPool};
 //!
 //! // Create a pool of maximum 5, checked on reuse without ttl.
+//!
 //! let pool = RedisPool::new(
 //!     RedisConnectionManager::new(redis::Client::open("redis://localhost:6379")?, true, None),
 //!     5,
 //! );
 //!
-//! // get a connection with the get() asyncc method and use it as regular redis connection
+//! // get a connection with the get() async method and use it as regular redis connection
 //! let mut con = pool.get().await?;
 //! con.set(b"key", b"value").await?;
 //! let value: Vec<u8> = con.get(b"key").await?;
@@ -74,8 +75,8 @@ impl RedisConnectionManager {
     /// Create a new connection mananager.
     ///
     /// If `check_on_recycle` is true, before each connection reuse, an `exists` command
-    /// is issued, if it fails to complete, the connection is dropped and a fresh connection.
-    /// will be created.
+    /// is issued, if it fails to complete, the connection is dropped and a fresh connection
+    /// is created.
     ///
     /// If `connection_ttl` is set, the connection will be recreated after the given duration.
     pub fn new(client: redis::Client, check_on_recycle: bool, connection_ttl: Option<Ttl>) -> Self {
