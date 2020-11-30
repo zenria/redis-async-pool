@@ -65,7 +65,7 @@ pub enum Ttl {
     /// for each `get()` on the pool.
     ///
     /// Enabling Once ttl means the pool will not keep any connection opened.
-    /// So it won't act as a pool of connection. Used for testing purpose.
+    /// So it won't really act as a pool of connection.
     Once,
 }
 
