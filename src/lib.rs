@@ -175,3 +175,9 @@ impl AsMut<redis::aio::Connection> for RedisConnection {
         &mut self.actual
     }
 }
+
+impl AsRef<redis::aio::Connection> for RedisConnection {
+    fn as_ref(&self) -> &redis::aio::Connection {
+        &self.actual
+    }
+}
