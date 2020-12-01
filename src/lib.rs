@@ -4,6 +4,13 @@
 //! connections of the [redis crate](https://crates.io/crates/redis). Connections returned by  
 //! the pool can be used as regular `redis::aio::Connection`.
 //!
+//! ## Foreword
+//!
+//! You may not need of a pool of async connections to Redis. Depending on your
+//! workload, a multiplexed connection will be way faster. Using the [`ConnectionManager`](https://docs.rs/redis/0.17.0/redis/aio/struct.ConnectionManager.html)
+//! provided by the redis crate, you can achieve very high performances without pooling
+//! connections.
+//!
 //! ## Features
 //! - runtime agnostic (tested with tokio & async-std)
 //! - optional check of connection on recycle
@@ -159,6 +166,12 @@ impl Deref for RedisConnection {
 
 impl DerefMut for RedisConnection {
     fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.actual
+    }
+}
+
+impl AsMut<redis::aio::Connection> for RedisConnection {
+    fn as_mut(&mut self) -> &mut redis::aio::Connection {
         &mut self.actual
     }
 }
