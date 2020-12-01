@@ -1,7 +1,7 @@
 ## 0.2.4
 
-- encourage not to use this crate but use redis crate ConnectionManager
-- implements  `AsRef<redis::aio::Connection>` & `AsMut<redis::aio::Connection>` for RedisConnection to ease usage in generic code.
+- encourage not to use this crate but use redis crate `ConnectionManager`
+- implements  `AsRef<redis::aio::Connection>` & `AsMut<redis::aio::Connection>` for `RedisConnection` to ease usage in generic code.
 
 ## 0.2.3
 
