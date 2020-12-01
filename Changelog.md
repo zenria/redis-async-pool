@@ -1,3 +1,8 @@
+## 0.2.4
+
+- encourage not to use this crate but use redis crate ConnectionManager
+- implements AsMut<redis::aio::Connection> for RedisConnection to ease usage in generic code.
+
 ## 0.2.3
 
 - once ttl
