@@ -102,7 +102,10 @@ impl RedisConnectionManager {
 }
 
 #[async_trait]
-impl deadpool::managed::Manager<RedisConnection, redis::RedisError> for RedisConnectionManager {
+impl deadpool::managed::Manager for RedisConnectionManager {
+    type Error = redis::RedisError;
+    type Type = RedisConnection;
+
     async fn create(&self) -> Result<RedisConnection, redis::RedisError> {
         Ok(RedisConnection {
             actual: self.client.get_async_connection().await?,
@@ -115,7 +118,7 @@ impl deadpool::managed::Manager<RedisConnection, redis::RedisError> for RedisCon
                         Instant::now()
                             + *min
                             + Duration::from_secs_f64(
-                                rand::thread_rng().gen_range(0.0, fuzz.as_secs_f64()),
+                                rand::thread_rng().gen_range((0.0)..fuzz.as_secs_f64()),
                             )
                     }
                     // already expired ;)
