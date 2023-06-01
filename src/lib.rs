@@ -25,10 +25,10 @@
 //!
 //! // Create a pool of maximum 5 connections, checked on reuse without ttl.
 //!
-//! let pool = RedisPool::new(
-//!     RedisConnectionManager::new(redis::Client::open("redis://localhost:6379")?, true, None),
-//!     5,
-//! );
+//! let pool = RedisPool::builder(RedisConnectionManager::new(redis::Client::open("redis://localhost:6379")?, true, None))
+//!     .max_size(5)
+//!     .build()
+//!     .unwrap();
 //!
 //! // get a connection with the get() async method and use it as regular redis connection
 //! let mut con = pool.get().await?;
@@ -58,7 +58,7 @@ pub use deadpool;
 ///
 /// Use the `new` method to create a new pool. You can find
 /// more information in the documentation of the `deadpool` crate.
-pub type RedisPool = deadpool::managed::Pool<RedisConnection, redis::RedisError>;
+pub type RedisPool = deadpool::managed::Pool<RedisConnectionManager>;
 
 /// Time to live of a connection
 pub enum Ttl {
