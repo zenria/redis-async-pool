@@ -19,6 +19,7 @@
 //! ## Example
 //!
 //! ```rust
+//! # async move {
 //! use redis::AsyncCommands;
 //! use redis_async_pool::{RedisConnectionManager, RedisPool};
 //!
@@ -34,6 +35,7 @@
 //! con.set(b"key", b"value").await?;
 //! let value: Vec<u8> = con.get(b"key").await?;
 //! assert_eq!(value, b"value");
+//! # }
 //! ```
 //!
 //! You can set a ttl for each created connection by the pool,
@@ -46,7 +48,7 @@ use std::{
 };
 
 use async_trait::async_trait;
-use deadpool::managed::RecycleError;
+use deadpool::managed::{RecycleError, RecycleResult};
 use rand::Rng;
 use redis::AsyncCommands;
 
@@ -85,7 +87,7 @@ pub struct RedisConnectionManager {
 }
 
 impl RedisConnectionManager {
-    /// Create a new connection mananager.
+    /// Create a new connection manager.
     ///
     /// If `check_on_recycle` is true, before each connection reuse, an `exists` command
     /// is issued, if it fails to complete, the connection is dropped and a fresh connection
@@ -157,7 +159,7 @@ pub struct RedisConnection {
     expires_at: Option<Instant>,
 }
 
-// Impl Deref & DefrefMut so the RedisConnection can be used as the real
+// Impl Deref & DerefMut so the RedisConnection can be used as the real
 // redis::aio::Connection
 
 impl Deref for RedisConnection {
