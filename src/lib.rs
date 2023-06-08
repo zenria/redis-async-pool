@@ -19,7 +19,8 @@
 //! ## Example
 //!
 //! ```rust
-//! # async move {
+//! # use std::error::Error;
+//! # async fn run() -> Result<(), Box<dyn Error>> {
 //! use redis::AsyncCommands;
 //! use redis_async_pool::{RedisConnectionManager, RedisPool};
 //!
@@ -35,6 +36,7 @@
 //! con.set(b"key", b"value").await?;
 //! let value: Vec<u8> = con.get(b"key").await?;
 //! assert_eq!(value, b"value");
+//! # Ok(())
 //! # }
 //! ```
 //!
@@ -48,7 +50,7 @@ use std::{
 };
 
 use async_trait::async_trait;
-use deadpool::managed::{RecycleError, RecycleResult};
+use deadpool::managed::{RecycleError};
 use rand::Rng;
 use redis::AsyncCommands;
 

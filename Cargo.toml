@@ -10,7 +10,7 @@ license = "MIT OR Apache-2.0"
 readme = "Readme.md"
 
 [dependencies]
-redis = { version = "0", features = ['aio', 'streams', 'connection-manager', 'tokio-comp'] }
+redis = { version = "0.23.0", features = ['aio', 'streams', 'connection-manager', 'tokio-comp'] }
 deadpool = { version = "0.9.5" }
 async-trait = { version = "0.1.68" }
 rand = { version = "0.8.5" }

@@ -1,14 +1,13 @@
 use std::error::Error;
-
 use redis::AsyncCommands;
+
 use redis_async_pool::{RedisConnectionManager, RedisPool};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    let pool = RedisPool::new(
+    let pool = RedisPool::builder(
         RedisConnectionManager::new(redis::Client::open("redis://localhost:6379")?, true, None),
-        5,
-    );
+    ).max_size(5).build()?;
 
     let mut con = pool.get().await?;
     con.set(b"key", b"value").await?;
